@@ -4,6 +4,7 @@ services:
   nuxt-app:
     build:
       context: .
+    image: example-nuxt-app
     volumes:
       - ./:/app
       - /app/node_modules
