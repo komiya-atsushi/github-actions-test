@@ -32,13 +32,13 @@ jobs:
 
       - name: Build Docker image
         run: docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1
-        if: steps.cache-docker-layer.outputs.cache-hit != 'true'
+        # if: steps.cache-docker-layer.outputs.cache-hit != 'true'
 
       - name: Save Docker image
         run: mkdir -p ${IMAGE_CACHE_DIR}
-          && docker image tag ${IMAGE_NAME} ${IMAGE_NAME}:cache
-          && docker image save -o ${IMAGE_CACHE_DIR}/image.tar ${IMAGE_NAME}:cache
-        if: steps.cache-docker-layer.outputs.cache-hit != 'true'
+          && docker image tag ${IMAGE_NAME} ${IMAGE_NAME}-cache
+          && docker image save -o ${IMAGE_CACHE_DIR}/image.tar ${IMAGE_NAME}-cache
+        # if: steps.cache-docker-layer.outputs.cache-hit != 'true'
 
       - name: Run docker-compose up
         run: docker-compose up -d
