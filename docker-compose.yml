@@ -4,9 +4,6 @@ services:
   nuxt-app:
     build:
       context: .
-      cache_from:
-        - example-nuxt-app-cache
-    image: example-nuxt-app
     volumes:
       - ./:/app
       - /app/node_modules
