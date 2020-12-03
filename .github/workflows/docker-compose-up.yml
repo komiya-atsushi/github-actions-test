@@ -3,6 +3,11 @@ name: Run docker-compose up
 on:
   push:
 
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+  IMAGE_CACHE_DIR: /tmp/cache/docker-image
+
 jobs:
   run-docker-compose-up:
     runs-on: ubuntu-20.04
@@ -10,6 +15,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Cache Docker layer
+        id: cache-docker-layer
+        uses: actions/cache@v2.1.3
+        with:
+          path: ${{ env.IMAGE_CACHE_DIR }}
+          key: ${{ runner.os }}-docker-compose-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-compose-
+
+      - name: Docker load
+        if: steps.cache-docker-layer.outputs.cache-hit == 'true'
+        run: docker image load -i ${IMAGE_CACHE_DIR}/image.tar
 
       - name: Run docker-compose up
         run: docker-compose up -d
