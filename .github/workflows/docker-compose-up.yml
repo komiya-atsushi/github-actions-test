@@ -1,0 +1,15 @@
+name: Run docker-compose up
+
+on:
+  push:
+
+jobs:
+  run-docker-compose-up:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run docker-compose up
+        run: docker-compose up
