@@ -7,6 +7,7 @@ env:
   DOCKER_BUILDKIT: 1
   COMPOSE_DOCKER_CLI_BUILD: 1
   IMAGE_CACHE_DIR: /tmp/cache/docker-image
+  IMAGE_NAME: example-nuxt-app
 
 jobs:
   run-docker-compose-up:
@@ -25,9 +26,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-compose-
 
-      - name: Docker load
-        if: steps.cache-docker-layer.outputs.cache-hit == 'true'
-        run: docker image load -i ${IMAGE_CACHE_DIR}/image.tar
+#      - name: Docker load
+#        run: docker image load -i ${IMAGE_CACHE_DIR}/image.tar
+#        if: steps.cache-docker-layer.outputs.cache-hit == 'true'
+
+      - name: Build Docker image
+        run: docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1
+
+      - name: Save Docker image
+        run: mkdir -p ${IMAGE_CACHE_DIR}
+          && docker image tag ${IMAGE_NAME} ${IMAGE_NAME}:cache
+          && docker image save -o ${IMAGE_CACHE_DIR}/image.tar ${IMAGE_NAME}:cache
+#        if: steps.cache-docker-layer.outputs.cache-hit != 'true'
 
       - name: Run docker-compose up
         run: docker-compose up -d
