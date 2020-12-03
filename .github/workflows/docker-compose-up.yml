@@ -26,9 +26,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-compose-
 
-#      - name: Docker load
-#        run: docker image load -i ${IMAGE_CACHE_DIR}/image.tar
-#        if: steps.cache-docker-layer.outputs.cache-hit == 'true'
+      - name: Load Docker image
+        run: docker image load -i ${IMAGE_CACHE_DIR}/image.tar
+        if: steps.cache-docker-layer.outputs.cache-hit == 'true'
 
       - name: Build Docker image
         run: docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1
@@ -37,7 +37,7 @@ jobs:
         run: mkdir -p ${IMAGE_CACHE_DIR}
           && docker image tag ${IMAGE_NAME} ${IMAGE_NAME}:cache
           && docker image save -o ${IMAGE_CACHE_DIR}/image.tar ${IMAGE_NAME}:cache
-#        if: steps.cache-docker-layer.outputs.cache-hit != 'true'
+        if: steps.cache-docker-layer.outputs.cache-hit != 'true'
 
       - name: Run docker-compose up
         run: docker-compose up -d
