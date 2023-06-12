@@ -13,7 +13,7 @@ jobs:
 
       - name: Enforce timeout-minutes
         id: enforce-timeout-minutes
-        uses: komiya-atsushi/action-enforce-timeout-minutes@v1.0.0
+        uses: komiya-atsushi/action-enforce-timeout-minutes@v1
 
       - name: Slack notification
         uses: rtCamp/action-slack-notify@v2
